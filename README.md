@@ -115,7 +115,7 @@ Initially all the endpoints should return the following output:
     "settings1":"From appsettings.json",
     "settings2":"From appsettings.Development.json",
     "settings3":"From user-secrets",
-    "settings4":"From user-secrets",
+    "settings4":"From environment-variables",
     "settings5":"From cli-args",
     "settings6":"From postgreSQL",
     "settings7":"From postgreSQL"

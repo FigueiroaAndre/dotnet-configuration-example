@@ -5,10 +5,15 @@ This repository contains an example of how to use configuration in a .NET applic
 The example application will define multiple values for the section "GeneralSettings" from different configuration sources.
 
 `appsettings.json` defines values from "Settings1" to "Settings7".
+
 `appsettings.Development.json` overrides "Settings2" to "Settings7".
+
 .NET user secrets overrides "Settings3" to "Settings7".
+
 Environment variables override "Settings4" to "Settings7".
+
 Command-line arguments override "Settings5" to "Settings7".
+
 Custom configuration provider using a PostgreSQL overrides "Settings6" and "Settings7".
 
 ## Setup

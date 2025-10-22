@@ -43,7 +43,9 @@ dotnet run -e "GeneralSettings:Settings7"="From cli-args" -e "GeneralSettings:Se
 ```
 
 ### PostgreSQL
-1. Ensure you have a PostgreSQL database running. For this example lets create one with Docker:
+1. Ensure you have a PostgreSQL database running.
+
+For this example lets create one with Docker:
 ```bash
 docker volume create general-settings-db-volume
 
@@ -57,12 +59,14 @@ docker run -d \
 	postgres
 ```
 2. Setup the connection string:
+
 The application uses the value stored in the configuration "ConnectionStrings:DefaultConnection" to connect to the PostgreSQL database. You can set this configuration whatever way you prefer (appsettings.json, environment variable, user-secrets, etc). Here is an example of setting it using user-secrets. Notice that the connection string points to the Docker container created in the previous step, any changes on the command in the last step should be reflected here.
 ```
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=general-settings-db;Username=root;Password=123456"
 ```
 
 3. Create and Run migrations
+
 The model and DbContext for the custom configuration provider is already defined in the project. You just need to create and run the migrations:
 ```bash
 dotnet ef migrations add CreateSettingsTable --context ApplicationDBContext
@@ -70,6 +74,7 @@ dotnet ef database update --context ApplicationDBContext
 ```
 
 4. Insert the settings into the database:
+
 Run the following SQL commands to insert "Settings6" and "Settings7" into the database:
 ```sql
 insert into public."Settings" ("Id", "Key", "Value")
@@ -79,6 +84,7 @@ values
 ```
 
 5. [Optional] Setup a database trigger to automatically reload configuration on changes:
+
 You can create a trigger function and a trigger to notify the application when the "Settings" table is updated.
 ```sql
 create or replace function notify_settings_change()

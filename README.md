@@ -108,3 +108,20 @@ The application define 3 endpoints to see the configuration values:
 - `/general` - Uses `IOptions` interface to get configuration values, never updates.
 - `/general-snapshot` - Uses `IOptionsSnapshot` interface to get configuration values, reads updated values on scope creation (every request).
 - `/general-monitor` - Uses `IOptionsMonitor` interface to get configuration values, updates on change notification.
+
+Initially all the endpoints should return the following output:
+```json
+{
+    "settings1":"From appsettings.json",
+    "settings2":"From appsettings.Development.json",
+    "settings3":"From user-secrets",
+    "settings4":"From user-secrets",
+    "settings5":"From cli-args",
+    "settings6":"From postgreSQL",
+    "settings7":"From postgreSQL"
+}
+```
+
+The output of `/general` will remain the same until the application is restarted.
+
+The output of `/general-snapshot` and `/general-monitor` will update automatically when changes are made to any of the configuration sources, including changes made directly to the PostgreSQL database if the trigger is set up.

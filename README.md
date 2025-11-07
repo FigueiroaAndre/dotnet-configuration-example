@@ -109,6 +109,31 @@ Remember to run the application with the command-line arguments mentioned above 
 dotnet run -e "GeneralSettings:Settings7"="From cli-args" -e "GeneralSettings:Settings6"="From cli-args" -e "GeneralSettings:Settings5"="From cli-args"
 ```
 
+## Running the Application (with Docker)
+1. Build the Docker image:
+`docker build -t dotnet-configuration-example:1.0 .`
+
+2. Run the Docker container.
+
+- Make sure to pass the same environment variables and command-line argumnents as described above in the "Setup" section.
+- Also, make sure pass the ConnectionStrings:DefaultConnection configuration so the application can connect to the PostgreSQL database. Previously we set this value using user-secrets, but since user-secrets are not available when running the builded .dll on a Docker container, we need to set it using environment variables or command-line arguments. This also means that the `settings3` value defined in `appsettings.Development.json` will not be overridden when running the application in Docker.
+
+```bash
+docker run \
+ --name configuration-example \
+ --network host \
+ -e GeneralSettings__Settings4="From environment-variables" \
+ -e GeneralSettings__Settings5="From environment-variables" \
+ -e GeneralSettings__Settings6="From environment-variables" \
+ -e GeneralSettings__Settings7="From environment-variables" \
+ -e ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=general-settings-db;Username=root;Password=123456" \
+ -d dotnet-configuration-example:1.0 \
+ -e "GeneralSettings:Settings5"="From cli-args" \
+ -e "GeneralSettings:Settings6"="From cli-args" \
+ -e "GeneralSettings:Settings7"="From cli-args"
+
+```
+
 ## Expected output
 The application define 3 endpoints to see the configuration values:
 - `/general` - Uses `IOptions` interface to get configuration values, never updates.
@@ -121,6 +146,19 @@ Initially all the endpoints should return the following output:
     "settings1":"From appsettings.json",
     "settings2":"From appsettings.Development.json",
     "settings3":"From user-secrets",
+    "settings4":"From environment-variables",
+    "settings5":"From cli-args",
+    "settings6":"From postgreSQL",
+    "settings7":"From postgreSQL"
+}
+```
+
+Or, if running in Docker without user-secrets configured, the output will be:
+```json
+{
+    "settings1":"From appsettings.json",
+    "settings2":"From appsettings.Development.json",
+    "settings3":"From appsettings.Development.json",
     "settings4":"From environment-variables",
     "settings5":"From cli-args",
     "settings6":"From postgreSQL",
